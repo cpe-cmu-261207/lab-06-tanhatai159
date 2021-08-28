@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import Navbar from './components/Navbar';
-import { BrowserRouter as Router, Switch, Route } from 'react-router-dom'
+import { BrowserRouter as Router, Switch, Route, Link } from 'react-router-dom'
 import axios from 'axios';
 
 function App() {
@@ -17,8 +17,19 @@ function App() {
     }
   }
 
-  const [loading, setloading] = useState(false);
-  const [coin, setCoin] = useState<bitcoin | null>(null);
+  const [loading, setloading] = useState<boolean>(false)
+  const [coin, setCoin] = useState<bitcoin | null>(null)
+
+  useEffect(() => {
+    setloading(true)
+    axios.get<bitcoin>(`https://api.coindesk.com/v1/bpi/currentprice/thb.json`)
+      .then(resp => {
+        setCoin(resp.data);
+        setloading(false);
+      })
+      .catch(err => console.log(err));
+  }, [])
+
 
   const price_page = () => {
     if (loading) {
@@ -27,6 +38,7 @@ function App() {
       )
     }
     else if (loading === false) {
+      console.log("5555")
       return (
         <div className='text-center space-y-3'>
           <p className='text-2xl font-semibold'>Current price</p>
@@ -38,60 +50,35 @@ function App() {
   }
 
   const history_page = () => {
-    if (loading) {
-      return (
-        <p className='text-2xl'>Loading ...</p>
-      )
-    }
-    else if (loading === false) {
-      return (
-        <div className='text-center space-y-3'>
-          <p className='text-2xl font-semibold'>Current price</p>
-          <p className='text-2xl'> {coin?.bpi.THB.rate} THB</p>
-          <p> (Last updated {coin?.time.updated}) </p>
-        </div>
-      )
-    }
+    return (
+      <div className='text-center space-y-3 space-x-3'>
+        <p className='text-2xl font-semibold'>Select historical range</p>
+        <span>From date</span>
+        <input type='date' onChange={e => console.log(e.target.value)}></input>
+        <span>To date</span>
+        <input type='date' onChange={e => console.log(e.target.value)}></input>
+        <br />
+        <button>Get data</button>
+      </div>
+    )
   }
-
-  useEffect(() => {
-    setloading(true)
-    axios.get<bitcoin>("https://api.coindesk.com/v1/bpi/currentprice/thb.json")
-      .then(resp => {
-        setCoin(resp.data);
-        setloading(false);
-      })
-      .catch(err => console.log(err));
-    axios.get("https://api.coindesk.com/v1/bpi/historical/close.json?currency=THB")
-      .then(resp => resp.data)
-      .catch(err => console.log(err));
-  }, [])
 
   return (
     <Router>
-      <Navbar />
+      <Navbar/>
       <Switch>
-        <Route path="/">
+        <Route path='/'>
           {price_page()}
         </Route>
 
         {/* template for /current */}
-
-        <Route path="/current">
+        <Route path='/current'>
           {price_page()}
         </Route>
 
         {/* template for /history/select */}
-        <Route path="/history/select">
-          <div className='text-center space-y-3 space-x-3'>
-            <p className='text-2xl font-semibold'>Select historical range</p>
-            <span>From date</span>
-            <input type='date' onChange={e => console.log(e.target.value)}></input>
-            <span>To date</span>
-            <input type='date' onChange={e => console.log(e.target.value)}></input>
-            <br />
-            <button>Get data</button>
-          </div>
+        <Route path='/history/select'>
+          {history_page()}
         </Route>
 
         {/* template for /history/result */}
