@@ -2,52 +2,10 @@ import React, { useEffect, useState } from 'react';
 import Navbar from './components/Navbar';
 import { BrowserRouter as Router, Switch, Route, Link } from 'react-router-dom'
 import axios from 'axios';
+import Price from './components/Price';
+import About from './components/About';
 
 function App() {
-
-  type bitcoin = {
-    time: {
-      updated: string;
-    }
-    bpi: {
-      THB: {
-        rate: string;
-        code: string;
-      }
-    }
-  }
-
-  const [loading, setloading] = useState<boolean>(false)
-  const [coin, setCoin] = useState<bitcoin | null>(null)
-
-  useEffect(() => {
-    setloading(true)
-    axios.get<bitcoin>(`https://api.coindesk.com/v1/bpi/currentprice/thb.json`)
-      .then(resp => {
-        setCoin(resp.data);
-        setloading(false);
-      })
-      .catch(err => console.log(err));
-  }, [])
-
-
-  const price_page = () => {
-    if (loading) {
-      return (
-        <p className='text-2xl'>Loading ...</p>
-      )
-    }
-    else if (loading === false) {
-      console.log("5555")
-      return (
-        <div className='text-center space-y-3'>
-          <p className='text-2xl font-semibold'>Current price</p>
-          <p className='text-2xl'> {coin?.bpi.THB.rate} THB</p>
-          <p> (Last updated {coin?.time.updated}) </p>
-        </div>
-      )
-    }
-  }
 
   const history_page = () => {
     return (
@@ -65,15 +23,15 @@ function App() {
 
   return (
     <Router>
-      <Navbar/>
+        <Navbar/>
       <Switch>
         <Route path='/'>
-          {price_page()}
+          <Price/>
         </Route>
 
         {/* template for /current */}
         <Route path='/current'>
-          {price_page()}
+
         </Route>
 
         {/* template for /history/select */}
@@ -97,10 +55,7 @@ function App() {
 
         {/* template for about me */}
         <Route path="/about">
-          <div className='text-center space-y-3'>
-            <p className='text-2xl font-semibold'>About me</p>
-            <p className='text-xl'>Tanhatai Klungmajareon 630610732</p>
-          </div>
+          <About/>
         </Route>
 
       </Switch>

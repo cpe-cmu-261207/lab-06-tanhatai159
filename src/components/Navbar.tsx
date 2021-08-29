@@ -1,4 +1,4 @@
-import {Link} from 'react-router-dom'
+import {Link } from 'react-router-dom'
 
 const Navbar = () => {
 	return (
@@ -6,15 +6,13 @@ const Navbar = () => {
 			<p className='text-center text-3xl italic my-5'>Minimal Bitcoin App</p>
 			<div className='flex justify-center text-md space-x-5'>
 				<p>
-					<Link to = "/current">Current price</Link>
+					<Link to="/current">Current price</Link>
 				</p>	
 				<p>|</p>
-				<p>
-					<Link to = "/history/select">Historical price</Link>
-				</p>	
+				<p>Historical price</p>	
 				<p>|</p>
 				<p>
-					<Link to = "/about">About me</Link>	
+					<Link to = "/about">About me</Link> 
 				</p>	
 			</div>
 		</div>
