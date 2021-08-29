@@ -16,7 +16,7 @@ const Price = () => {
 
     const [loading, setloading] = useState<boolean>(false)
     const [coin, setCoin] = useState<bitcoin | null>(null)
-
+    
     useEffect(() => {
         setloading(true)
         axios.get<bitcoin>(`https://api.coindesk.com/v1/bpi/currentprice/thb.json`)
