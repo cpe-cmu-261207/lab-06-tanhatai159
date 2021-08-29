@@ -2,22 +2,19 @@ import { useLocation } from "react-router-dom";
 import { useEffect, useState } from "react";
 import axios from "axios";
 
-type allCoin = {
-    bpi: Record<string , number> | null;
-    disclaimer: string;
-    time: Record<string, string>;
-}
-
-function useQuery() {
-    return new URLSearchParams(useLocation().search);
-}
-
 const Result = () => {
+
+    type allCoin = {
+        bpi: Record<string, number> | null;
+    }
 
     const [loading, setLoading] = useState<boolean>(true);
     const [coindata, setCoinData] = useState<allCoin | null>(null);
     const [error, setError] = useState<boolean>(false);
 
+    function useQuery() {
+        return new URLSearchParams(useLocation().search);
+    }
     let query = useQuery();
     const start = query.get("start");
     const end = query.get("end");
@@ -58,10 +55,10 @@ const Result = () => {
 
             const arrData: data[] = []
 
-            if(coindata?.bpi){
+            if (coindata?.bpi) {
                 for (const [key, value] of Object.entries(coindata?.bpi)) {
-                    arrData.push({key,value});
-                  }
+                    arrData.push({ key, value });
+                }
             }
 
             return (
